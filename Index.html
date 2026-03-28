@@ -1,981 +1,968 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Otito AI - The Strongest AI Coding Assistant</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background: #000;
-            color: #fff;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            line-height: 1.6;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(30, 41, 59, 0.5);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(147, 51, 234, 0.6);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(147, 51, 234, 0.8);
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-300px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes glow {
-            0%, 100% {
-                box-shadow: 0 0 20px rgba(147, 51, 234, 0.5);
-            }
-            50% {
-                box-shadow: 0 0 40px rgba(34, 197, 238, 0.8);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        /* Navigation */
-        nav {
-            border-bottom: 1px solid rgba(147, 51, 234, 0.2);
-            backdrop-filter: blur(10px);
-            background: rgba(0, 0, 0, 0.8);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 50;
-            padding: 1rem 1.5rem;
-        }
-
-        nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(to right, #a855f7, #22d3ee);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .btn {
-            padding: 0.625rem 1rem;
-            border: none;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.875rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(to right, #9333ea, #06b6d4);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(to right, #a855f7, #22d3ee);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(147, 51, 234, 0.3);
-        }
-
-        .btn-outline {
-            border: 1px solid rgba(147, 51, 234, 0.3);
-            background: transparent;
-            color: white;
-        }
-
-        .btn-outline:hover {
-            background: rgba(147, 51, 234, 0.2);
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: white;
-        }
-
-        .btn-ghost:hover {
-            background: rgba(147, 51, 234, 0.2);
-        }
-
-        /* Pages */
-        .page {
-            display: none;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        /* Landing Page */
-        .landing {
-            min-height: 100vh;
-            background: #000;
-        }
-
-        .hero {
-            max-width: 80rem;
-            margin: 0 auto;
-            padding: 8rem 1.5rem 2rem;
-            text-align: center;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-            animation: fadeIn 0.8s ease-out 0.2s both;
-        }
-
-        .hero h1 .gradient {
-            background: linear-gradient(to right, #a855f7, #22d3ee, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: #cbd5e1;
-            max-width: 42rem;
-            margin: 0 auto 2rem;
-            animation: fadeIn 0.8s ease-out 0.4s both;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin: 2rem 0 4rem;
-            animation: fadeIn 0.8s ease-out 0.6s both;
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            max-width: 80rem;
-            margin: 4rem auto;
-            padding: 0 1.5rem;
-        }
-
-        .feature-card {
-            background: linear-gradient(135deg, rgba(147, 51, 234, 0.1), rgba(30, 41, 59, 0.3));
-            border: 1px solid rgba(147, 51, 234, 0.2);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            transition: all 0.3s;
-            animation: fadeIn 0.8s ease-out both;
-        }
-
-        .feature-card:nth-child(1) { animation-delay: 0.8s; }
-        .feature-card:nth-child(2) { animation-delay: 0.9s; }
-        .feature-card:nth-child(3) { animation-delay: 1s; }
-
-        .feature-card:hover {
-            border-color: rgba(147, 51, 234, 0.5);
-            background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(30, 41, 59, 0.4));
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            font-size: 1.125rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .feature-card p {
-            font-size: 0.875rem;
-            color: #94a3b8;
-        }
-
-        /* Chat Page */
-        .chat-container {
-            display: flex;
-            height: 100vh;
-            background: #000;
-            padding-top: 60px;
-            gap: 1rem;
-            padding: 4.5rem 1rem 1rem;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 16rem;
-            background: linear-gradient(to bottom, #0f172a, #1e293b);
-            border-right: 1px solid rgba(147, 51, 234, 0.2);
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            animation: slideIn 0.3s ease-out;
-            overflow-y: auto;
-        }
-
-        .sidebar-logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(to right, #a855f7, #22d3ee);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-
-        .sidebar-section {
-            border-top: 1px solid rgba(147, 51, 234, 0.2);
-            padding-top: 1rem;
-        }
-
-        .sidebar-section p {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #a78bfa;
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-        }
-
-        .sidebar-item {
-            width: 100%;
-            text-align: left;
-            padding: 0.625rem;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
-            color: #cbd5e1;
-        }
-
-        .sidebar-item:hover {
-            background: rgba(147, 51, 234, 0.2);
-            color: #a78bfa;
-        }
-
-        /* Chat Main */
-        .chat-main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: linear-gradient(135deg, #1e293b, #2d1b4e, #1e293b);
-            border: 1px solid rgba(147, 51, 234, 0.2);
-            border-radius: 1rem;
-            overflow: hidden;
-        }
-
-        .chat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid rgba(147, 51, 234, 0.2);
-            background: rgba(15, 23, 42, 0.5);
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .message {
-            display: flex;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .message.user {
-            justify-content: flex-end;
-        }
-
-        .message.assistant {
-            justify-content: flex-start;
-        }
-
-        .message-content {
-            max-width: 70%;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
-            word-wrap: break-word;
-            white-space: pre-wrap;
-        }
-
-        .message.user .message-content {
-            background: linear-gradient(to right, #9333ea, #06b6d4);
-            color: white;
-        }
-
-        .message.assistant .message-content {
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(147, 51, 234, 0.3);
-            color: #e2e8f0;
-        }
-
-        .chat-input-area {
-            padding: 1rem;
-            border-top: 1px solid rgba(147, 51, 234, 0.2);
-            background: rgba(15, 23, 42, 0.5);
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        textarea {
-            flex: 1;
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(147, 51, 234, 0.3);
-            color: white;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            font-family: inherit;
-            font-size: 0.875rem;
-            resize: vertical;
-            min-height: 80px;
-            max-height: 150px;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #22d3ee;
-            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
-        }
-
-        textarea::placeholder {
-            color: #64748b;
-        }
-
-        /* Preview */
-        .preview-area {
-            flex: 1;
-            background: linear-gradient(135deg, #1e293b, #2d1b4e, #1e293b);
-            border: 1px solid rgba(34, 211, 238, 0.2);
-            border-radius: 1rem;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            min-width: 400px;
-        }
-
-        .preview-header {
-            background: rgba(15, 23, 42, 0.5);
-            border-bottom: 1px solid rgba(34, 211, 238, 0.2);
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .preview-header h3 {
-            font-size: 0.875rem;
-            color: #22d3ee;
-        }
-
-        .preview-content {
-            flex: 1;
-            overflow: auto;
-            padding: 1rem;
-        }
-
-        .code-block {
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(30, 41, 59, 0.5);
-            border-radius: 0.5rem;
-            padding: 1rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.75rem;
-            overflow-x: auto;
-            color: #e2e8f0;
-            line-height: 1.5;
-        }
-
-        .iframe-preview {
-            width: 100%;
-            height: 300px;
-            border: none;
-            background: white;
-            border-radius: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .empty-state {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            text-align: center;
-            color: #64748b;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal.active {
-            display: flex;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .modal-content {
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            border: 1px solid rgba(147, 51, 234, 0.3);
-            border-radius: 1rem;
-            padding: 2rem;
-            max-width: 400px;
-            width: 100%;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .modal-content h2 {
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-
-        .modal-content label {
-            display: block;
-            font-size: 0.875rem;
-            color: #a78bfa;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .modal-content input {
-            width: 100%;
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(147, 51, 234, 0.3);
-            color: white;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
-        }
-
-        .modal-content input:focus {
-            outline: none;
-            border-color: #22d3ee;
-        }
-
-        .modal-footer {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1.5rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .chat-container {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                flex-direction: row;
-                overflow-x: auto;
-                max-height: 60px;
-            }
-
-            .preview-area {
-                display: none;
-            }
-
-            .message-content {
-                max-width: 85%;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-            }
-
-            .features {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-content {
-                margin: 1rem;
-            }
-
-            textarea {
-                min-height: 60px;
-            }
-        }
-
-        /* Utilities */
-        .loading {
-            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .text-sm {
-            font-size: 0.875rem;
-            color: #94a3b8;
-        }
-
-        .mt-2 {
-            margin-top: 0.5rem;
-        }
-    </style>
-</head>
-<body>
-    <!-- Navigation -->
-    <nav>
-        <nav-content>
-            <div class="logo">✨ Otito AI</div>
-            <button class="btn btn-primary" onclick="goToPage('chat')">Launch App →</button>
-        </nav-content>
-    </nav>
-
-    <!-- Landing Page -->
-    <div id="landing" class="page active">
-        <div class="landing">
-            <div class="hero">
-                <h1>
-                    The Strongest AI Coding Assistant
-                    <span class="gradient">On the Web</span>
-                </h1>
-                <p>Build complete web applications and generate stunning videos with Otito. No login required. Powered by xAI Grok.</p>
-                <div class="cta-buttons">
-                    <button class="btn btn-primary" onclick="goToPage('chat')">Start Building Now ⚡</button>
-                </div>
-
-                <div class="features">
-                    <div class="feature-card">
-                        <div class="feature-icon">💻</div>
-                        <h3>Complete Web Apps</h3>
-                        <p>Generate full-stack applications instantly. From dashboards to SaaS platforms.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🎬</div>
-                        <h3>Video Generation</h3>
-                        <p>Create detailed video prompts for Kling, Runway, and Luma. Instant cinematic content.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
-                        <h3>Lightning Fast</h3>
-                        <p>Live preview updates in real-time. See your code rendered instantly.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Chat Page -->
-    <div id="chat" class="page">
-        <div class="chat-container">
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <div class="sidebar-logo">✨ Otito AI</div>
-                <button class="btn btn-primary" onclick="newChat()">➕ New Chat</button>
-                
-                <div class="sidebar-section">
-                    <p>Quick Start</p>
-                    <button class="btn btn-ghost sidebar-item" onclick="insertPrompt('Build me a Twitter clone with modern UI')">Build a Dashboard</button>
-                    <button class="btn btn-ghost sidebar-item" onclick="insertPrompt('Generate a video prompt for a futuristic city at night')">Generate Video</button>
-                    <button class="btn btn-ghost sidebar-item" onclick="insertPrompt('Create a beautiful modern landing page')">Modern Website</button>
-                </div>
-
-                <div class="sidebar-section">
-                    <p>About</p>
-                    <p class="text-sm">Powered by xAI Grok 2. The strongest coding AI on the web. No login required.</p>
-                </div>
-            </div>
-
-            <!-- Chat Main -->
-            <div class="chat-main">
-                <div class="chat-header">
-                    <h1 style="font-size: 1.25rem;">Otito AI Chat</h1>
-                    <button class="btn btn-ghost" onclick="toggleSettings()">⚙️ Settings</button>
-                </div>
-
-                <div class="chat-messages" id="messages">
-                    <div class="message assistant">
-                        <div class="message-content">
-                            👋 Hello! I'm Otito, your AI coding assistant. I can help you:
-                            • Build complete web applications
-                            • Generate stunning video prompts
-                            • Create beautiful modern websites
-                            
-                            What would you like me to build today?
-                        </div>
-                    </div>
-                </div>
-
-                <div class="chat-input-area">
-                    <textarea id="input" placeholder="Ask Otito to build anything... websites, dashboards, or generate videos" onkeypress="handleKeyPress(event)"></textarea>
-                    <div class="input-group">
-                        <button class="btn btn-primary" onclick="sendMessage()" style="flex: 1;">Send Message</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Preview Area -->
-            <div class="preview-area">
-                <div class="preview-header">
-                    <h3>📱 Live Preview</h3>
-                    <button class="btn btn-outline" id="copyBtn" onclick="copyCode()" style="display: none;">Copy Code</button>
-                </div>
-                <div class="preview-content">
-                    <div id="preview" class="empty-state">
-                        <div>
-                            <p>Live preview will appear here</p>
-                            <p class="text-sm mt-2">Ask Otito to build something</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="modal">
-        <div class="modal-content">
-            <h2>Settings</h2>
-            <label>xAI Grok API Key (Optional)</label>
-            <input type="password" id="apiKey" placeholder="xai-..." value="">
-            <p class="text-sm mt-2">Get your free API key from <a href="https://console.x.ai/" target="_blank" style="color: #22d3ee;">console.x.ai</a></p>
-            
-            <div class="modal-footer">
-                <button class="btn btn-ghost" onclick="toggleSettings()" style="flex: 1;">Close</button>
-                <button class="btn btn-primary" onclick="saveSettings()" style="flex: 1;">Save</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // State
-        const state = {
-            messages: [],
-            currentCode: '',
-            apiKey: localStorage.getItem('otito-api-key') || ''
-        };
-
-        // Page Navigation
-        function goToPage(page) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(page).classList.add('active');
-        }
-
-        // Settings
-        function toggleSettings() {
-            document.getElementById('settingsModal').classList.toggle('active');
-        }
-
-        function saveSettings() {
-            const apiKey = document.getElementById('apiKey').value;
-            localStorage.setItem('otito-api-key', apiKey);
-            state.apiKey = apiKey;
-            toggleSettings();
-            alert('Settings saved! ✅');
-        }
-
-        // Chat Functions
-        function handleKeyPress(e) {
-            if (e.key === 'Enter' && e.ctrlKey) {
-                sendMessage();
-            }
-        }
-
-        function insertPrompt(prompt) {
-            document.getElementById('input').value = prompt;
-            document.getElementById('input').focus();
-        }
-
-        function newChat() {
-            state.messages = [];
-            document.getElementById('messages').innerHTML = `
-                <div class="message assistant">
-                    <div class="message-content">
-                        👋 Hello! I'm Otito, your AI coding assistant. What would you like me to build today?
-                    </div>
-                </div>
-            `;
-            document.getElementById('preview').innerHTML = `
-                <div class="empty-state">
-                    <div>
-                        <p>Live preview will appear here</p>
-                        <p class="text-sm mt-2">Ask Otito to build something</p>
-                    </div>
-                </div>
-            `;
-            state.currentCode = '';
-            document.getElementById('input').value = '';
-        }
-
-        async function sendMessage() {
-            const input = document.getElementById('input').value.trim();
-            if (!input) return;
-
-            // Add user message
-            state.messages.push({ role: 'user', content: input });
-            addMessageToUI('user', input);
-            document.getElementById('input').value = '';
-
-            // Get AI response
-            try {
-                const response = await getAIResponse(input);
-                state.messages.push({ role: 'assistant', content: response });
-                addMessageToUI('assistant', response);
-                
-                // Extract code if present
-                extractAndDisplayCode(response);
-            } catch (error) {
-                addMessageToUI('assistant', '❌ Error: ' + error.message);
-            }
-        }
-
-        function addMessageToUI(role, content) {
-            const messagesDiv = document.getElementById('messages');
-            const messageEl = document.createElement('div');
-            messageEl.className = `message ${role}`;
-            
-            const contentEl = document.createElement('div');
-            contentEl.className = 'message-content';
-            contentEl.textContent = content;
-            
-            messageEl.appendChild(contentEl);
-            messagesDiv.appendChild(messageEl);
-            
-            // Scroll to bottom
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-
-        async function getAIResponse(prompt) {
-            // Simulate AI response with smart prompting
-            const systemPrompt = `You are Otito, the strongest AI coding assistant in the world. 
-            When asked to build something, provide complete, production-ready code.
-            When asked for video, create detailed video prompts.
-            Always be helpful and creative.`;
-
-            // For demo - return smart responses based on keywords
-            if (prompt.toLowerCase().includes('twitter')) {
-                return `I'll create a beautiful Twitter clone for you!
-
-\`\`\`html
-<!DOCTYPE html>
-<html>
-<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Otito Dev Tools</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; }
-body { font-family: Arial; background: #f5f5f5; }
-.container { max-width: 600px; margin: 0 auto; padding: 20px; }
-.tweet { background: white; border: 1px solid #e1e8ed; margin: 10px 0; padding: 15px; border-radius: 8px; }
-.tweet-author { font-weight: bold; color: #1da1f2; }
-.tweet-text { margin-top: 10px; }
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --panel: #161920;
+    --border: #1f2430;
+    --accent: #00e5ff;
+    --accent2: #7c3aed;
+    --success: #00e676;
+    --warning: #ffab40;
+    --error: #ff1744;
+    --text: #e8eaf0;
+    --muted: #565f7a;
+    --glow: 0 0 20px rgba(0,229,255,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── Header ─── */
+  header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,12,16,0.9);
+    backdrop-filter: blur(20px);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    color: #000;
+    box-shadow: 0 0 16px rgba(0,229,255,0.4);
+  }
+
+  .logo-text {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-text span { color: var(--accent); }
+
+  .header-badges {
+    display: flex;
+    gap: 8px;
+  }
+
+  .badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border: 1px solid;
+  }
+
+  .badge-ai { border-color: var(--accent); color: var(--accent); }
+  .badge-live { border-color: var(--success); color: var(--success); }
+  .badge-live::before { content: '● '; animation: pulse 1.5s infinite; }
+
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.3 } }
+
+  /* ─── Language Selector ─── */
+  .lang-bar {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    overflow-x: auto;
+  }
+
+  .lang-label {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    margin-right: 8px;
+  }
+
+  .lang-btn {
+    padding: 5px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .lang-btn.active {
+    background: rgba(0,229,255,0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 12px rgba(0,229,255,0.1);
+  }
+
+  /* ─── Main Layout ─── */
+  main {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    height: calc(100vh - 110px);
+  }
+
+  /* ─── Panels ─── */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+  }
+
+  .panel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+
+  .panel-title .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .dot-blue { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+  .dot-green { background: var(--success); box-shadow: 0 0 6px var(--success); }
+  .dot-purple { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
+  .dot-orange { background: var(--warning); box-shadow: 0 0 6px var(--warning); }
+
+  .panel-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .btn {
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+
+  .btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,0.05); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #00b0cc);
+    border-color: var(--accent);
+    color: #000;
+    font-weight: 700;
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 0 20px rgba(0,229,255,0.4);
+    color: #000;
+    background: linear-gradient(135deg, #33ebff, var(--accent));
+  }
+
+  /* ─── Code Editor ─── */
+  .code-wrap {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+  }
+
+  .line-numbers {
+    padding: 16px 0;
+    min-width: 48px;
+    text-align: right;
+    padding-right: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow: hidden;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  #codeInput {
+    flex: 1;
+    padding: 16px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    resize: none;
+    tab-size: 2;
+    caret-color: var(--accent);
+    overflow-y: auto;
+  }
+
+  #codeInput::placeholder { color: var(--muted); }
+
+  /* ─── Errors Panel ─── */
+  #errorsPanel {
+    grid-column: 1;
+    max-height: 220px;
+    min-height: 60px;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .errors-list {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .error-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    animation: slideIn 0.2s ease;
+  }
+
+  @keyframes slideIn { from { opacity:0; transform: translateY(-4px); } to { opacity:1; transform:none; } }
+
+  .error-item.error { border-color: rgba(255,23,68,0.3); background: rgba(255,23,68,0.06); }
+  .error-item.warning { border-color: rgba(255,171,64,0.3); background: rgba(255,171,64,0.06); }
+  .error-item.info { border-color: rgba(0,229,255,0.2); background: rgba(0,229,255,0.04); }
+
+  .error-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .error-content { flex: 1; }
+  .error-msg { color: var(--text); }
+  .error-line { color: var(--muted); font-size: 11px; margin-top: 2px; }
+  .error-fix {
+    margin-top: 4px;
+    color: var(--success);
+    font-size: 11px;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .error-fix:hover { opacity: 0.8; }
+
+  .no-errors {
+    padding: 16px;
+    text-align: center;
+    color: var(--success);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  /* ─── Preview ─── */
+  #previewPanel {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    border-left: 2px solid var(--border);
+  }
+
+  #previewFrame {
+    flex: 1;
+    border: none;
+    background: #fff;
+    width: 100%;
+  }
+
+  .preview-placeholder {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  .preview-placeholder .big-icon {
+    font-size: 48px;
+    opacity: 0.3;
+  }
+
+  /* ─── Alternative Code ─── */
+  #altPanel {
+    grid-column: 1;
+    max-height: 200px;
+    border-top: 1px solid var(--border);
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .alt-content {
+    padding: 12px 16px;
+  }
+
+  .alt-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    animation: slideIn 0.3s ease;
+  }
+
+  .alt-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(124,58,237,0.1);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .alt-block-title {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: #a78bfa;
+    font-weight: 600;
+  }
+
+  .btn-apply {
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid #7c3aed;
+    background: rgba(124,58,237,0.2);
+    color: #a78bfa;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-apply:hover { background: rgba(124,58,237,0.4); }
+
+  .alt-code {
+    padding: 10px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #a78bfa;
+    white-space: pre-wrap;
+    word-break: break-all;
+    line-height: 1.6;
+  }
+
+  .alt-explanation {
+    padding: 6px 12px 10px;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ─── Analyze Button Area ─── */
+  .analyze-bar {
+    grid-column: 1 / 3;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 10;
+  }
+
+  .analyze-bar .status {
+    flex: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .status .status-text { transition: color 0.3s; }
+  .status .ok { color: var(--success); }
+  .status .analyzing { color: var(--accent); }
+  .status .has-errors { color: var(--error); }
+
+  /* Loading bar */
+  .loading-bar {
+    position: absolute;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    width: 0%;
+    transition: width 0.3s;
+    display: none;
+  }
+
+  /* ─── Scrollbars ─── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  /* ─── Resize handle ─── */
+  .resize-handle {
+    height: 4px;
+    background: var(--border);
+    cursor: row-resize;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .resize-handle:hover { background: var(--accent); }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 768px) {
+    main { grid-template-columns: 1fr; height: auto; }
+    #previewPanel { grid-column: 1; grid-row: auto; height: 300px; border-left: none; border-top: 2px solid var(--border); }
+    #altPanel { grid-column: 1; }
+    .analyze-bar { grid-column: 1; }
+    header { padding: 14px 16px; }
+    .lang-bar { padding: 10px 16px; }
+  }
+
+  /* Code input top section */
+  #inputPanel { grid-column: 1; grid-row: 1; }
+
+  /* Highlighted errors in editor (visual line highlight) */
+  .error-highlight {
+    background: rgba(255,23,68,0.08);
+  }
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>Twitter Clone</h1>
-  <div class="tweet">
-    <div class="tweet-author">@user</div>
-    <div class="tweet-text">This is a beautiful tweet! ✨</div>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">OD</div>
+    <span class="logo-text">Otito <span>Dev Tools</span></span>
   </div>
-</div>
-</body>
-</html>
-\`\`\`
-
-This is a basic Twitter clone. You can extend it with more features!`;
-            }
-
-            if (prompt.toLowerCase().includes('dashboard')) {
-                return `Great! Here's a modern dashboard for you:
-
-\`\`\`html
-<!DOCTYPE html>
-<html>
-<head>
-<style>
-* { margin: 0; padding: 0; }
-body { font-family: 'Segoe UI'; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
-.dashboard { max-width: 1200px; margin: 0 auto; }
-.header { color: white; margin-bottom: 30px; }
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-.card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-.card h3 { color: #667eea; margin-bottom: 10px; }
-.stat { font-size: 2em; font-weight: bold; color: #333; }
-</style>
-</head>
-<body>
-<div class="dashboard">
-  <div class="header"><h1>Dashboard</h1></div>
-  <div class="cards">
-    <div class="card"><h3>Users</h3><div class="stat">1,234</div></div>
-    <div class="card"><h3>Revenue</h3><div class="stat">$45,678</div></div>
-    <div class="card"><h3>Growth</h3><div class="stat">23%</div></div>
+  <div class="header-badges">
+    <span class="badge badge-ai">AI Powered</span>
+    <span class="badge badge-live">Live</span>
   </div>
+</header>
+
+<!-- Language Bar -->
+<div class="lang-bar">
+  <span class="lang-label">Language:</span>
+  <button class="lang-btn active" data-lang="html">HTML</button>
+  <button class="lang-btn" data-lang="css">CSS</button>
+  <button class="lang-btn" data-lang="javascript">JavaScript</button>
+  <button class="lang-btn" data-lang="python">Python</button>
+  <button class="lang-btn" data-lang="json">JSON</button>
+  <button class="lang-btn" data-lang="sql">SQL</button>
+  <button class="lang-btn" data-lang="typescript">TypeScript</button>
+  <button class="lang-btn" data-lang="auto">Auto Detect</button>
 </div>
-</body>
-</html>
+
+<!-- Main Grid -->
+<main>
+
+  <!-- Code Input Panel -->
+  <div class="panel" id="inputPanel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="dot dot-blue"></span>
+        Code Editor
+      </div>
+      <div class="panel-actions">
+        <button class="btn" id="clearBtn">Clear</button>
+        <button class="btn" id="pasteBtn">Paste</button>
+        <button class="btn" id="copyBtn">Copy</button>
+        <button class="btn btn-primary" id="analyzeBtn">Analyze ↗</button>
+      </div>
+    </div>
+    <div class="code-wrap">
+      <div class="line-numbers" id="lineNumbers">1</div>
+      <textarea id="codeInput" placeholder="// Paste your code here...
+// Otito Dev Tools will analyze syntax errors,
+// show a live preview, and suggest improvements.
+
+Example:
+<div class=&quot;container&gt;
+  <h1>Hello World<h1>
+  <p style=color:red>This has errors</p>
+</div>"></textarea>
+    </div>
+    <div class="resize-handle" id="resizeHandle"></div>
+  </div>
+
+  <!-- Errors Panel -->
+  <div class="panel" id="errorsPanel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="dot dot-orange"></span>
+        Errors &amp; Warnings
+        <span id="errorCount" style="background:rgba(255,23,68,0.2);color:var(--error);padding:1px 7px;border-radius:10px;font-size:10px;display:none"></span>
+      </div>
+      <div class="panel-actions">
+        <button class="btn" id="fixAllBtn">Auto Fix All</button>
+      </div>
+    </div>
+    <div id="errorsList" class="errors-list">
+      <div class="no-errors">✓ No errors yet — paste your code and click Analyze</div>
+    </div>
+  </div>
+
+  <!-- Live Preview Panel -->
+  <div class="panel" id="previewPanel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="dot dot-green"></span>
+        Live Preview
+      </div>
+      <div class="panel-actions">
+        <button class="btn" id="refreshPreview">↺ Refresh</button>
+        <button class="btn" id="openPopout">⊞ Pop Out</button>
+      </div>
+    </div>
+    <div class="preview-placeholder" id="previewPlaceholder">
+      <span class="big-icon">🖥️</span>
+      <span>Preview will appear here</span>
+      <span style="font-size:11px">Works best with HTML code</span>
+    </div>
+    <iframe id="previewFrame" style="display:none" sandbox="allow-scripts allow-same-origin"></iframe>
+  </div>
+
+  <!-- Alternative Code Panel -->
+  <div class="panel" id="altPanel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="dot dot-purple"></span>
+        Suggested Fixes &amp; Alternatives
+      </div>
+    </div>
+    <div id="altContent" class="alt-content">
+      <div class="no-errors" style="color:var(--muted)">✦ Improvements and alternatives will appear here after analysis</div>
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="analyze-bar">
+    <div class="loading-bar" id="loadingBar"></div>
+    <div class="status">
+      <span class="status-text" id="statusText">Ready — select a language and paste your code</span>
+    </div>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)" id="charCount">0 chars</span>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)" id="lineCount">0 lines</span>
+  </div>
+
+</main>
+
+<script>
+const ANTHROPIC_API = "https://api.anthropic.com/v1/messages";
+
+let currentLang = "html";
+let analyzeTimeout = null;
+let isAnalyzing = false;
+
+// ─── Language Selection ───
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentLang = btn.dataset.lang;
+    updateStatus(`Language set to ${currentLang.toUpperCase()}`);
+  });
+});
+
+// ─── Code Input ───
+const codeInput = document.getElementById('codeInput');
+const lineNumbers = document.getElementById('lineNumbers');
+const charCount = document.getElementById('charCount');
+const lineCount = document.getElementById('lineCount');
+
+codeInput.addEventListener('input', () => {
+  updateLineNumbers();
+  updateCounts();
+  scheduleAutoAnalyze();
+  updatePreview();
+});
+
+codeInput.addEventListener('scroll', () => {
+  lineNumbers.scrollTop = codeInput.scrollTop;
+});
+
+codeInput.addEventListener('keydown', e => {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const start = codeInput.selectionStart;
+    const end = codeInput.selectionEnd;
+    codeInput.value = codeInput.value.substring(0, start) + '  ' + codeInput.value.substring(end);
+    codeInput.selectionStart = codeInput.selectionEnd = start + 2;
+    updateLineNumbers();
+  }
+});
+
+function updateLineNumbers() {
+  const lines = codeInput.value.split('\n').length;
+  lineNumbers.innerHTML = Array.from({length: lines}, (_, i) => i + 1).join('<br>');
+}
+
+function updateCounts() {
+  const code = codeInput.value;
+  charCount.textContent = `${code.length} chars`;
+  lineCount.textContent = `${code.split('\n').length} lines`;
+}
+
+function scheduleAutoAnalyze() {
+  if (analyzeTimeout) clearTimeout(analyzeTimeout);
+  analyzeTimeout = setTimeout(() => {
+    if (codeInput.value.trim().length > 20) analyzeCode();
+  }, 1800);
+}
+
+// ─── Preview ───
+function updatePreview() {
+  const code = codeInput.value.trim();
+  const frame = document.getElementById('previewFrame');
+  const placeholder = document.getElementById('previewPlaceholder');
+
+  if (!code) {
+    frame.style.display = 'none';
+    placeholder.style.display = 'flex';
+    return;
+  }
+
+  const isHTML = currentLang === 'html' || currentLang === 'auto';
+  const isCSS = currentLang === 'css';
+  const isJS = currentLang === 'javascript' || currentLang === 'typescript';
+
+  let previewContent = '';
+
+  if (isHTML) {
+    previewContent = code;
+  } else if (isCSS) {
+    previewContent = `<!DOCTYPE html><html><head><style>${code}</style></head><body><div class="preview-demo"><h1>Heading</h1><p>Paragraph text here</p><button>Button</button><a href="#">Link</a></div></body></html>`;
+  } else if (isJS) {
+    previewContent = `<!DOCTYPE html><html><head><style>body{font-family:monospace;padding:20px;background:#1a1a2e;color:#e8eaf0;}</style></head><body><pre id="output"></pre><script>
+const log = console.log;
+const output = document.getElementById('output');
+console.log = (...args) => { output.textContent += args.join(' ') + '\\n'; log(...args); };
+try { ${code} } catch(e) { output.style.color='#ff1744'; output.textContent = 'Error: ' + e.message; }
+<\/script></body></html>`;
+  } else {
+    frame.style.display = 'none';
+    placeholder.style.display = 'flex';
+    return;
+  }
+
+  frame.style.display = 'block';
+  placeholder.style.display = 'none';
+  frame.srcdoc = previewContent;
+}
+
+document.getElementById('refreshPreview').addEventListener('click', updatePreview);
+document.getElementById('openPopout').addEventListener('click', () => {
+  const code = codeInput.value.trim();
+  if (!code) return;
+  const w = window.open('', '_blank', 'width=800,height=600');
+  w.document.write(code);
+  w.document.close();
+});
+
+// ─── Buttons ───
+document.getElementById('clearBtn').addEventListener('click', () => {
+  codeInput.value = '';
+  updateLineNumbers();
+  updateCounts();
+  updatePreview();
+  document.getElementById('errorsList').innerHTML = '<div class="no-errors">✓ No errors yet — paste your code and click Analyze</div>';
+  document.getElementById('altContent').innerHTML = '<div class="no-errors" style="color:var(--muted)">✦ Improvements and alternatives will appear here after analysis</div>';
+  document.getElementById('errorCount').style.display = 'none';
+  updateStatus('Cleared');
+});
+
+document.getElementById('pasteBtn').addEventListener('click', async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    codeInput.value = text;
+    updateLineNumbers();
+    updateCounts();
+    updatePreview();
+    updateStatus('Pasted from clipboard');
+    scheduleAutoAnalyze();
+  } catch {
+    updateStatus('Paste failed — try Ctrl+V in the editor');
+  }
+});
+
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  await navigator.clipboard.writeText(codeInput.value);
+  updateStatus('Copied to clipboard ✓');
+});
+
+document.getElementById('analyzeBtn').addEventListener('click', analyzeCode);
+
+document.getElementById('fixAllBtn').addEventListener('click', applyAutoFix);
+
+// ─── Status ───
+function updateStatus(msg, type = '') {
+  const el = document.getElementById('statusText');
+  el.textContent = msg;
+  el.className = 'status-text ' + type;
+}
+
+function showLoading(on) {
+  const bar = document.getElementById('loadingBar');
+  if (on) {
+    bar.style.display = 'block';
+    bar.style.width = '0%';
+    setTimeout(() => bar.style.width = '70%', 50);
+  } else {
+    bar.style.width = '100%';
+    setTimeout(() => { bar.style.display = 'none'; bar.style.width = '0%'; }, 400);
+  }
+}
+
+// ─── AI Analysis ───
+async function analyzeCode() {
+  const code = codeInput.value.trim();
+  if (!code || isAnalyzing) return;
+
+  isAnalyzing = true;
+  updateStatus('Analyzing with AI...', 'analyzing');
+  showLoading(true);
+
+  const lang = currentLang === 'auto' ? 'auto-detect the language and' : `for ${currentLang.toUpperCase()} code:`;
+
+  const prompt = `You are a code analysis tool called Otito Dev Tools. Analyze the following code ${lang} find ALL syntax errors, bugs, and improvements.
+
+Return ONLY valid JSON (no markdown, no backticks) with this exact structure:
+{
+  "detectedLanguage": "html|css|javascript|python|json|sql|other",
+  "errors": [
+    {
+      "type": "error|warning|info",
+      "line": <line number or null>,
+      "message": "Short error description",
+      "fix": "Brief fix suggestion"
+    }
+  ],
+  "alternatives": [
+    {
+      "title": "Short improvement title",
+      "code": "corrected code snippet (max 5 lines)",
+      "explanation": "Why this is better"
+    }
+  ],
+  "fixedCode": "The complete corrected version of the entire code"
+}
+
+Rules:
+- Find real syntax errors first, then warnings, then style improvements
+- Keep errors array to max 8 items
+- Keep alternatives array to max 3 items  
+- fixedCode must be the FULL corrected code
+- Be specific about line numbers when possible
+
+Code to analyze:
 \`\`\`
+${code.substring(0, 3000)}
+\`\`\``;
 
-A beautiful, responsive dashboard template!`;
-            }
+  try {
+    const response = await fetch(ANTHROPIC_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
 
-            if (prompt.toLowerCase().includes('video')) {
-                return `🎬 Here's a detailed video generation prompt:
+    const data = await response.json();
+    const rawText = data.content?.map(c => c.text || '').join('') || '';
 
-**Scene:** Futuristic cyberpunk city at night
-**Duration:** 30 seconds
-**Aspect Ratio:** 16:9
+    // Extract JSON
+    let jsonText = rawText.trim();
+    const jsonMatch = jsonText.match(/\{[\s\S]*\}/);
+    if (jsonMatch) jsonText = jsonMatch[0];
 
-**Detailed Description:**
-Camera pans through a neon-lit cityscape at night. Tall skyscrapers with glowing purple and cyan lights. Flying vehicles zip through the air leaving light trails. Rain falls, reflecting the neon lights. The camera moves up to reveal a massive holographic advertisement. Ambient electronic music plays. The mood is cyberpunk, energetic, and futuristic.
+    const result = JSON.parse(jsonText);
+    renderResults(result);
+    updatePreview();
 
-**Camera Movement:**
-- Start with wide shot of cityscape
-- Slow pan left
-- Zoom into building details
-- Track upward to sky
+    if (result.errors && result.errors.length > 0) {
+      const errCount = result.errors.filter(e => e.type === 'error').length;
+      updateStatus(`Found ${result.errors.length} issue${result.errors.length !== 1 ? 's' : ''} (${errCount} error${errCount !== 1 ? 's' : ''})`, 'has-errors');
+    } else {
+      updateStatus('✓ No issues found — code looks clean!', 'ok');
+    }
 
-**Lighting:**
-- Key Light: Neon purple from left
-- Fill Light: Cyan glow from right
-- Rim Light: Yellow neon accents
+  } catch (err) {
+    updateStatus('Analysis failed — check console', '');
+    console.error(err);
+    document.getElementById('errorsList').innerHTML = `<div class="error-item warning"><span class="error-icon">⚠</span><div class="error-content"><div class="error-msg">Could not connect to AI analysis. Check your network or try again.</div></div></div>`;
+  }
 
-**Style:** Photorealistic with cyberpunk color grading
+  showLoading(false);
+  isAnalyzing = false;
+}
 
-You can use this prompt on Kling AI, Runway ML, or Luma Dream Machine!`;
-            }
+let lastFixedCode = '';
 
-            return `✨ I'm Otito AI! I can help you build web applications, generate videos, and create amazing content. 
+function renderResults(result) {
+  // Errors
+  const errorsList = document.getElementById('errorsList');
+  const errorCount = document.getElementById('errorCount');
 
-Try asking me to:
-- "Build a Twitter clone"
-- "Create a modern dashboard"
-- "Generate a video of a futuristic city"
+  if (!result.errors || result.errors.length === 0) {
+    errorsList.innerHTML = '<div class="no-errors">✓ No errors found — your code looks good!</div>';
+    errorCount.style.display = 'none';
+  } else {
+    errorCount.textContent = result.errors.length;
+    errorCount.style.display = 'inline';
 
-What would you like me to create?`;
-        }
+    errorsList.innerHTML = result.errors.map((err, i) => `
+      <div class="error-item ${err.type || 'warning'}">
+        <span class="error-icon">${err.type === 'error' ? '✖' : err.type === 'info' ? 'ℹ' : '⚠'}</span>
+        <div class="error-content">
+          <div class="error-msg">${escHtml(err.message)}</div>
+          ${err.line ? `<div class="error-line">Line ${err.line}</div>` : ''}
+          ${err.fix ? `<div class="error-fix" title="${escHtml(err.fix)}">→ ${escHtml(err.fix)}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
 
-        function extractAndDisplayCode(text) {
-            const codeMatch = text.match(/\`\`\`(?:html|jsx|tsx)?\n([\s\S]*?)\n\`\`\`/);
-            
-            if (codeMatch) {
-                const code = codeMatch[1];
-                state.currentCode = code;
-                
-                const previewDiv = document.getElementById('preview');
-                previewDiv.innerHTML = `
-                    <div style="height: 100%; display: flex; flex-direction: column;">
-                        <div class="code-block" style="flex: 1; margin-bottom: 10px; overflow: auto;">${escapeHtml(code)}</div>
-                        <iframe class="iframe-preview" sandbox="allow-scripts" srcdoc="${escapeHtml(code)}"></iframe>
-                    </div>
-                `;
-                
-                document.getElementById('copyBtn').style.display = 'block';
-            }
-        }
+  // Store fixed code for auto-fix
+  if (result.fixedCode) lastFixedCode = result.fixedCode;
 
-        function copyCode() {
-            if (!state.currentCode) return;
-            navigator.clipboard.writeText(state.currentCode);
-            const btn = document.getElementById('copyBtn');
-            const original = btn.textContent;
-            btn.textContent = '✅ Copied!';
-            setTimeout(() => {
-                btn.textContent = original;
-            }, 2000);
-        }
+  // Alternatives
+  const altContent = document.getElementById('altContent');
+  if (!result.alternatives || result.alternatives.length === 0) {
+    altContent.innerHTML = '<div class="no-errors" style="color:var(--muted)">✦ No major alternatives suggested — your code structure is fine</div>';
+  } else {
+    altContent.innerHTML = result.alternatives.map((alt, i) => `
+      <div class="alt-block">
+        <div class="alt-block-header">
+          <span class="alt-block-title">✦ ${escHtml(alt.title)}</span>
+          <button class="btn-apply" onclick="applyAlternative(${i})">Apply</button>
+        </div>
+        <div class="alt-code">${escHtml(alt.code)}</div>
+        <div class="alt-explanation">${escHtml(alt.explanation)}</div>
+      </div>
+    `).join('');
+  }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+  window._alternatives = result.alternatives || [];
+}
 
-        // Load saved API key
-        if (state.apiKey) {
-            document.getElementById('apiKey').value = state.apiKey;
-        }
-    </script>
+function applyAlternative(i) {
+  const alt = window._alternatives?.[i];
+  if (!alt) return;
+  // Append the alternative as a comment + code block
+  const current = codeInput.value;
+  codeInput.value = current + '\n\n/* ── Otito Suggestion ──\n' + alt.title + '\n──────────────────── */\n' + alt.code;
+  updateLineNumbers();
+  updateCounts();
+  updatePreview();
+  updateStatus('Alternative applied ✓', 'ok');
+}
+
+function applyAutoFix() {
+  if (!lastFixedCode) {
+    updateStatus('Run analysis first to get auto-fix', '');
+    return;
+  }
+  codeInput.value = lastFixedCode;
+  updateLineNumbers();
+  updateCounts();
+  updatePreview();
+  updateStatus('Auto-fix applied ✓', 'ok');
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── Init ───
+updateLineNumbers();
+updateCounts();
+</script>
 </body>
 </html>
