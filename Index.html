@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otito AI - The Strongest AI Coding Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(147, 51, 234, 0.6);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(147, 51, 234, 0.8);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-300px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(147, 51, 234, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(34, 197, 238, 0.8);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Navigation */
+        nav {
+            border-bottom: 1px solid rgba(147, 51, 234, 0.2);
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.8);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 50;
+            padding: 1rem 1.5rem;
+        }
+
+        nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #a855f7, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn {
+            padding: 0.625rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #9333ea, #06b6d4);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #a855f7, #22d3ee);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(147, 51, 234, 0.3);
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            background: transparent;
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background: rgba(147, 51, 234, 0.2);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: white;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(147, 51, 234, 0.2);
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Landing Page */
+        .landing {
+            min-height: 100vh;
+            background: #000;
+        }
+
+        .hero {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 8rem 1.5rem 2rem;
+            text-align: center;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        .hero h1 .gradient {
+            background: linear-gradient(to right, #a855f7, #22d3ee, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            max-width: 42rem;
+            margin: 0 auto 2rem;
+            animation: fadeIn 0.8s ease-out 0.4s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0 4rem;
+            animation: fadeIn 0.8s ease-out 0.6s both;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 80rem;
+            margin: 4rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.1), rgba(30, 41, 59, 0.3));
+            border: 1px solid rgba(147, 51, 234, 0.2);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            animation: fadeIn 0.8s ease-out both;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.8s; }
+        .feature-card:nth-child(2) { animation-delay: 0.9s; }
+        .feature-card:nth-child(3) { animation-delay: 1s; }
+
+        .feature-card:hover {
+            border-color: rgba(147, 51, 234, 0.5);
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(30, 41, 59, 0.4));
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        /* Chat Page */
+        .chat-container {
+            display: flex;
+            height: 100vh;
+            background: #000;
+            padding-top: 60px;
+            gap: 1rem;
+            padding: 4.5rem 1rem 1rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 16rem;
+            background: linear-gradient(to bottom, #0f172a, #1e293b);
+            border-right: 1px solid rgba(147, 51, 234, 0.2);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            animation: slideIn 0.3s ease-out;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #a855f7, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-section {
+            border-top: 1px solid rgba(147, 51, 234, 0.2);
+            padding-top: 1rem;
+        }
+
+        .sidebar-section p {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #a78bfa;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-item {
+            width: 100%;
+            text-align: left;
+            padding: 0.625rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: #cbd5e1;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(147, 51, 234, 0.2);
+            color: #a78bfa;
+        }
+
+        /* Chat Main */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #1e293b, #2d1b4e, #1e293b);
+            border: 1px solid rgba(147, 51, 234, 0.2);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(147, 51, 234, 0.2);
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.assistant {
+            justify-content: flex-start;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(to right, #9333ea, #06b6d4);
+            color: white;
+        }
+
+        .message.assistant .message-content {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            color: #e2e8f0;
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid rgba(147, 51, 234, 0.2);
+            background: rgba(15, 23, 42, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        textarea {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            resize: vertical;
+            min-height: 80px;
+            max-height: 150px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #22d3ee;
+            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
+        }
+
+        textarea::placeholder {
+            color: #64748b;
+        }
+
+        /* Preview */
+        .preview-area {
+            flex: 1;
+            background: linear-gradient(135deg, #1e293b, #2d1b4e, #1e293b);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 1rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-width: 400px;
+        }
+
+        .preview-header {
+            background: rgba(15, 23, 42, 0.5);
+            border-bottom: 1px solid rgba(34, 211, 238, 0.2);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-header h3 {
+            font-size: 0.875rem;
+            color: #22d3ee;
+        }
+
+        .preview-content {
+            flex: 1;
+            overflow: auto;
+            padding: 1rem;
+        }
+
+        .code-block {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(30, 41, 59, 0.5);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            overflow-x: auto;
+            color: #e2e8f0;
+            line-height: 1.5;
+        }
+
+        .iframe-preview {
+            width: 100%;
+            height: 300px;
+            border: none;
+            background: white;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .empty-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            color: #64748b;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 400px;
+            width: 100%;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .modal-content label {
+            display: block;
+            font-size: 0.875rem;
+            color: #a78bfa;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .modal-content input {
+            width: 100%;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .modal-content input:focus {
+            outline: none;
+            border-color: #22d3ee;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .chat-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                overflow-x: auto;
+                max-height: 60px;
+            }
+
+            .preview-area {
+                display: none;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 1rem;
+            }
+
+            textarea {
+                min-height: 60px;
+            }
+        }
+
+        /* Utilities */
+        .loading {
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .mt-2 {
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <nav-content>
+            <div class="logo">✨ Otito AI</div>
+            <button class="btn btn-primary" onclick="goToPage('chat')">Launch App →</button>
+        </nav-content>
+    </nav>
+
+    <!-- Landing Page -->
+    <div id="landing" class="page active">
+        <div class="landing">
+            <div class="hero">
+                <h1>
+                    The Strongest AI Coding Assistant
+                    <span class="gradient">On the Web</span>
+                </h1>
+                <p>Build complete web applications and generate stunning videos with Otito. No login required. Powered by xAI Grok.</p>
+                <div class="cta-buttons">
+                    <button class="btn btn-primary" onclick="goToPage('chat')">Start Building Now ⚡</button>
+                </div>
+
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">💻</div>
+                        <h3>Complete Web Apps</h3>
+                        <p>Generate full-stack applications instantly. From dashboards to SaaS platforms.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎬</div>
+                        <h3>Video Generation</h3>
+                        <p>Create detailed video prompts for Kling, Runway, and Luma. Instant cinematic content.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Lightning Fast</h3>
+                        <p>Live preview updates in real-time. See your code rendered instantly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Page -->
+    <div id="chat" class="page">
+        <div class="chat-container">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-logo">✨ Otito AI</div>
+                <button class="btn btn-primary" onclick="newChat()">➕ New Chat</button>
+                
+                <div class="sidebar-section">
+                    <p>Quick Start</p>
+                    <button class="btn btn-ghost sidebar-item" onclick="insertPrompt('Build me a Twitter clone with modern UI')">Build a Dashboard</button>
+                    <button class="btn btn-ghost sidebar-item" onclick="insertPrompt('Generate a video prompt for a futuristic city at night')">Generate Video</button>
+                    <button class="btn btn-ghost sidebar-item" onclick="insertPrompt('Create a beautiful modern landing page')">Modern Website</button>
+                </div>
+
+                <div class="sidebar-section">
+                    <p>About</p>
+                    <p class="text-sm">Powered by xAI Grok 2. The strongest coding AI on the web. No login required.</p>
+                </div>
+            </div>
+
+            <!-- Chat Main -->
+            <div class="chat-main">
+                <div class="chat-header">
+                    <h1 style="font-size: 1.25rem;">Otito AI Chat</h1>
+                    <button class="btn btn-ghost" onclick="toggleSettings()">⚙️ Settings</button>
+                </div>
+
+                <div class="chat-messages" id="messages">
+                    <div class="message assistant">
+                        <div class="message-content">
+                            👋 Hello! I'm Otito, your AI coding assistant. I can help you:
+                            • Build complete web applications
+                            • Generate stunning video prompts
+                            • Create beautiful modern websites
+                            
+                            What would you like me to build today?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <textarea id="input" placeholder="Ask Otito to build anything... websites, dashboards, or generate videos" onkeypress="handleKeyPress(event)"></textarea>
+                    <div class="input-group">
+                        <button class="btn btn-primary" onclick="sendMessage()" style="flex: 1;">Send Message</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Area -->
+            <div class="preview-area">
+                <div class="preview-header">
+                    <h3>📱 Live Preview</h3>
+                    <button class="btn btn-outline" id="copyBtn" onclick="copyCode()" style="display: none;">Copy Code</button>
+                </div>
+                <div class="preview-content">
+                    <div id="preview" class="empty-state">
+                        <div>
+                            <p>Live preview will appear here</p>
+                            <p class="text-sm mt-2">Ask Otito to build something</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <h2>Settings</h2>
+            <label>xAI Grok API Key (Optional)</label>
+            <input type="password" id="apiKey" placeholder="xai-..." value="">
+            <p class="text-sm mt-2">Get your free API key from <a href="https://console.x.ai/" target="_blank" style="color: #22d3ee;">console.x.ai</a></p>
+            
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="toggleSettings()" style="flex: 1;">Close</button>
+                <button class="btn btn-primary" onclick="saveSettings()" style="flex: 1;">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        const state = {
+            messages: [],
+            currentCode: '',
+            apiKey: localStorage.getItem('otito-api-key') || ''
+        };
+
+        // Page Navigation
+        function goToPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(page).classList.add('active');
+        }
+
+        // Settings
+        function toggleSettings() {
+            document.getElementById('settingsModal').classList.toggle('active');
+        }
+
+        function saveSettings() {
+            const apiKey = document.getElementById('apiKey').value;
+            localStorage.setItem('otito-api-key', apiKey);
+            state.apiKey = apiKey;
+            toggleSettings();
+            alert('Settings saved! ✅');
+        }
+
+        // Chat Functions
+        function handleKeyPress(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                sendMessage();
+            }
+        }
+
+        function insertPrompt(prompt) {
+            document.getElementById('input').value = prompt;
+            document.getElementById('input').focus();
+        }
+
+        function newChat() {
+            state.messages = [];
+            document.getElementById('messages').innerHTML = `
+                <div class="message assistant">
+                    <div class="message-content">
+                        👋 Hello! I'm Otito, your AI coding assistant. What would you like me to build today?
+                    </div>
+                </div>
+            `;
+            document.getElementById('preview').innerHTML = `
+                <div class="empty-state">
+                    <div>
+                        <p>Live preview will appear here</p>
+                        <p class="text-sm mt-2">Ask Otito to build something</p>
+                    </div>
+                </div>
+            `;
+            state.currentCode = '';
+            document.getElementById('input').value = '';
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('input').value.trim();
+            if (!input) return;
+
+            // Add user message
+            state.messages.push({ role: 'user', content: input });
+            addMessageToUI('user', input);
+            document.getElementById('input').value = '';
+
+            // Get AI response
+            try {
+                const response = await getAIResponse(input);
+                state.messages.push({ role: 'assistant', content: response });
+                addMessageToUI('assistant', response);
+                
+                // Extract code if present
+                extractAndDisplayCode(response);
+            } catch (error) {
+                addMessageToUI('assistant', '❌ Error: ' + error.message);
+            }
+        }
+
+        function addMessageToUI(role, content) {
+            const messagesDiv = document.getElementById('messages');
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${role}`;
+            
+            const contentEl = document.createElement('div');
+            contentEl.className = 'message-content';
+            contentEl.textContent = content;
+            
+            messageEl.appendChild(contentEl);
+            messagesDiv.appendChild(messageEl);
+            
+            // Scroll to bottom
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        async function getAIResponse(prompt) {
+            // Simulate AI response with smart prompting
+            const systemPrompt = `You are Otito, the strongest AI coding assistant in the world. 
+            When asked to build something, provide complete, production-ready code.
+            When asked for video, create detailed video prompts.
+            Always be helpful and creative.`;
+
+            // For demo - return smart responses based on keywords
+            if (prompt.toLowerCase().includes('twitter')) {
+                return `I'll create a beautiful Twitter clone for you!
+
+\`\`\`html
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* { margin: 0; padding: 0; }
+body { font-family: Arial; background: #f5f5f5; }
+.container { max-width: 600px; margin: 0 auto; padding: 20px; }
+.tweet { background: white; border: 1px solid #e1e8ed; margin: 10px 0; padding: 15px; border-radius: 8px; }
+.tweet-author { font-weight: bold; color: #1da1f2; }
+.tweet-text { margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Twitter Clone</h1>
+  <div class="tweet">
+    <div class="tweet-author">@user</div>
+    <div class="tweet-text">This is a beautiful tweet! ✨</div>
+  </div>
+</div>
+</body>
+</html>
+\`\`\`
+
+This is a basic Twitter clone. You can extend it with more features!`;
+            }
+
+            if (prompt.toLowerCase().includes('dashboard')) {
+                return `Great! Here's a modern dashboard for you:
+
+\`\`\`html
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* { margin: 0; padding: 0; }
+body { font-family: 'Segoe UI'; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+.dashboard { max-width: 1200px; margin: 0 auto; }
+.header { color: white; margin-bottom: 30px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+.card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.card h3 { color: #667eea; margin-bottom: 10px; }
+.stat { font-size: 2em; font-weight: bold; color: #333; }
+</style>
+</head>
+<body>
+<div class="dashboard">
+  <div class="header"><h1>Dashboard</h1></div>
+  <div class="cards">
+    <div class="card"><h3>Users</h3><div class="stat">1,234</div></div>
+    <div class="card"><h3>Revenue</h3><div class="stat">$45,678</div></div>
+    <div class="card"><h3>Growth</h3><div class="stat">23%</div></div>
+  </div>
+</div>
+</body>
+</html>
+\`\`\`
+
+A beautiful, responsive dashboard template!`;
+            }
+
+            if (prompt.toLowerCase().includes('video')) {
+                return `🎬 Here's a detailed video generation prompt:
+
+**Scene:** Futuristic cyberpunk city at night
+**Duration:** 30 seconds
+**Aspect Ratio:** 16:9
+
+**Detailed Description:**
+Camera pans through a neon-lit cityscape at night. Tall skyscrapers with glowing purple and cyan lights. Flying vehicles zip through the air leaving light trails. Rain falls, reflecting the neon lights. The camera moves up to reveal a massive holographic advertisement. Ambient electronic music plays. The mood is cyberpunk, energetic, and futuristic.
+
+**Camera Movement:**
+- Start with wide shot of cityscape
+- Slow pan left
+- Zoom into building details
+- Track upward to sky
+
+**Lighting:**
+- Key Light: Neon purple from left
+- Fill Light: Cyan glow from right
+- Rim Light: Yellow neon accents
+
+**Style:** Photorealistic with cyberpunk color grading
+
+You can use this prompt on Kling AI, Runway ML, or Luma Dream Machine!`;
+            }
+
+            return `✨ I'm Otito AI! I can help you build web applications, generate videos, and create amazing content. 
+
+Try asking me to:
+- "Build a Twitter clone"
+- "Create a modern dashboard"
+- "Generate a video of a futuristic city"
+
+What would you like me to create?`;
+        }
+
+        function extractAndDisplayCode(text) {
+            const codeMatch = text.match(/\`\`\`(?:html|jsx|tsx)?\n([\s\S]*?)\n\`\`\`/);
+            
+            if (codeMatch) {
+                const code = codeMatch[1];
+                state.currentCode = code;
+                
+                const previewDiv = document.getElementById('preview');
+                previewDiv.innerHTML = `
+                    <div style="height: 100%; display: flex; flex-direction: column;">
+                        <div class="code-block" style="flex: 1; margin-bottom: 10px; overflow: auto;">${escapeHtml(code)}</div>
+                        <iframe class="iframe-preview" sandbox="allow-scripts" srcdoc="${escapeHtml(code)}"></iframe>
+                    </div>
+                `;
+                
+                document.getElementById('copyBtn').style.display = 'block';
+            }
+        }
+
+        function copyCode() {
+            if (!state.currentCode) return;
+            navigator.clipboard.writeText(state.currentCode);
+            const btn = document.getElementById('copyBtn');
+            const original = btn.textContent;
+            btn.textContent = '✅ Copied!';
+            setTimeout(() => {
+                btn.textContent = original;
+            }, 2000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load saved API key
+        if (state.apiKey) {
+            document.getElementById('apiKey').value = state.apiKey;
+        }
+    </script>
+</body>
+</html>
